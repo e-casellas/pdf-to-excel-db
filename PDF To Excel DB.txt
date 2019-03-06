@@ -1,0 +1,82 @@
+1	Begin Error Handling; Action: Stop Task; Options: Log to File,  Task Status: Fail
+2	     If File Does Not Exist ("C:\Users\SLip023\Desktop\AA Files\PDF Forms\PDFDB.xlsx")  Then  
+3	          Message Box: "Sorry, we couldn't find C:\Users\SLip023\Desktop\AA Files\PDF Forms\PDFDB.xlsx. Is it possible it was moved, renamed or deleted?"
+4	          Stop The Current Task
+5	     End If
+6	     Excel: Open Spreadsheet "C:\Users\SLip023\Desktop\AA Files\PDF Forms\PDFDB.xlsx". ActiveSheet: "Default". Contains Header. Session: Default
+7	     Excel: Go to cell "A1". Session: Default
+8	     Excel: Go to end of the column of the active cell. Session: Default
+9	     Start Loop "Each File In Folder C:\Users\SLip023\Desktop\AA Files\PDF Forms\"
+10	          If $Extension$ Equal To (=) "pdf" Then  
+11	               PDF Integration: Extract Form Fields from "C:\Users\SLip023\Desktop\AA Files\PDF Forms\$FileName$.$Extension$"
+12	               Variable Operation: True To $vExcelIsOpen$
+13	               Excel: Go to beginning of the row of the active cell. Session: Default
+14	               Excel: Go to one cell below the active cell. Session: Default
+15	               Comment: Check if Address 2 or House nr are left blank. If left blank, the form field will extract as "þÿ". Here I'll replace that with ""
+16	               If $vAddress2$ Equal To (=) "þÿ" Then  
+17	                    Variable Operation: "" To $vAddress2$
+18	               End If
+19	               If $vHouseNum$ Equal To (=) "þÿ" Then  
+20	                    Variable Operation: "" To $vHouseNum$
+21	               End If
+22	               If $vBoolDriverLic$ Equal To (=) "" Then  
+23	                    Variable Operation: No To $vBoolDriverLic$
+24	               End If
+25	               If $vLanguageDeutsch$ Equal To (=) "Yes" Then  
+26	                    Variable Operation: $vLanguages$ Deutsch To $vLanguages$
+27	               End If
+28	               If $vLanguageEnglish$ Equal To (=) "Yes" Then  
+29	                    Variable Operation: $vLanguages$ English To $vLanguages$
+30	               End If
+31	               If $vLanguageFrancais$ Equal To (=) "Yes" Then  
+32	                    Variable Operation: $vLanguages$ Francais To $vLanguages$
+33	               End If
+34	               If $vLanguageEsperanto$ Equal To (=) "Yes" Then  
+35	                    Variable Operation: $vLanguages$ Esperanto To $vLanguages$
+36	               End If
+37	               If $vLanguageLatin$ Equal To (=) "Yes" Then  
+38	                    Variable Operation: $vLanguages$ Latin To $vLanguages$
+39	               End If
+40	               String Operation: Replace "[ ]" with ", " in "$vLanguages$" and assign output to $vLanguages$ 
+41	               String Operation: Replace ", " with "" in "$vLanguages$" and assign output to $vLanguages$ 
+42	               Comment: Convert height in cm to ft
+43	               Variable Operation: $vHeightInCm$ * 0.032808 To $vHeightInFt$
+44	               String Operation: Extract substring from "$vHeightInFt$" and assign output to $vHeightInFt$
+45	               String Operation: Before-After "$vCountry$"; Before: "["; After: "]" and assign output to $vCountry$
+46	               String Operation: Before-After "$vGender$"; Before: "["; After: "]" and assign output to $vGender$
+47	               String Operation: Before-After "$vFavoriteColor$"; Before: "["; After: "]" and assign output to $vFavoriteColor$
+48	               Excel: Set value of Active Cell with "$vFirstName$". Session: Default
+49	               Excel: Go to one cell right of active cell. Session: Default
+50	               Excel: Set value of Active Cell with "$vLastName$". Session: Default
+51	               Excel: Go to one cell right of active cell. Session: Default
+52	               Excel: Set value of Active Cell with "$vAddress1$". Session: Default
+53	               Excel: Go to one cell right of active cell. Session: Default
+54	               Excel: Set value of Active Cell with "$vAddress2$". Session: Default
+55	               Excel: Go to one cell right of active cell. Session: Default
+56	               Excel: Set value of Active Cell with "$vHouseNum$". Session: Default
+57	               Excel: Go to one cell right of active cell. Session: Default
+58	               Excel: Set value of Active Cell with "$vPostCode$". Session: Default
+59	               Excel: Go to one cell right of active cell. Session: Default
+60	               Excel: Set value of Active Cell with "$vCity$". Session: Default
+61	               Excel: Go to one cell right of active cell. Session: Default
+62	               Excel: Set value of Active Cell with "$vCountry$". Session: Default
+63	               Excel: Go to one cell right of active cell. Session: Default
+64	               Excel: Set value of Active Cell with "$vGender$". Session: Default
+65	               Excel: Go to one cell right of active cell. Session: Default
+66	               Excel: Set value of Active Cell with "$vHeightInFt$". Session: Default
+67	               Excel: Go to one cell right of active cell. Session: Default
+68	               Excel: Set value of Active Cell with "$vBoolDriverLic$". Session: Default
+69	               Excel: Go to one cell right of active cell. Session: Default
+70	               Excel: Set value of Active Cell with "$vLanguages$". Session: Default
+71	               Excel: Go to one cell right of active cell. Session: Default
+72	               Excel: Set value of Active Cell with "$vFavoriteColor$". Session: Default
+73	               Variable Operation: "" To $vLanguages$
+74	          End If
+75	     End Loop
+76	     If $vExcelIsOpen$ Equal To (=) "True" Then  
+77	          Excel: Go to beginning of the row of the active cell. Session: Default
+78	          Excel: Close Spreadsheet. Session: Default
+79	     Else
+80	          Message Box: "Sorry, we couldn't find any PDF files inside C:\Users\SLip023\Desktop\AA Files\PDF Forms\. Is it possible they were moved or deleted?"
+81	     End If
+82	End Error Handling
